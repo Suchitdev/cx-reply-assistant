@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:5001";
 
 const initialBrandPolicies = {
   BottleCare: {
@@ -83,8 +85,9 @@ export default function App() {
 
   const messages = messagesByBrand[brand] || [];
 
+
   useEffect(() => {
-    fetch("http://127.0.0.1:5001/api/health")
+    fetch(`${API_BASE_URL}/api/health`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Backend unavailable");
@@ -98,6 +101,7 @@ export default function App() {
       })
       .catch(() => setApiStatus("Disconnected"));
   }, []);
+
 
 
   function sendMessage(event) {
@@ -137,9 +141,9 @@ export default function App() {
 
 
   async function generateDemoReply(currentMessages = messages) {
-  if (!Array.isArray(currentMessages)) {
+    if (!Array.isArray(currentMessages)) {
     currentMessages = messages;
-  }
+    }
     const latestCustomerMessage = [...currentMessages]
       .reverse()
       .find((message) => message.sender === "customer");
@@ -196,6 +200,17 @@ const policyContext = matchedPolicies.length
   : "No relevant policy was identified. Do not invent an answer. Ask the support team to review the question.";
 
 
+
+if (matchedPolicies.length === 0) {
+  const fallbackReply = `Thank you for contacting ${brand}. Our current policy does not include information about this request. Our support team will need to review your question and provide accurate information.`;
+
+  setRetrievedPolicy(policyContext);
+  setSuggestion(fallbackReply);
+  return;
+}
+
+
+
     setRetrievedPolicy(policyContext);
     setSuggestion("Generating AI reply...");
     setActivityLogs((previous) => [
@@ -209,7 +224,7 @@ const policyContext = matchedPolicies.length
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:5001/api/generate-reply",
+        `${API_BASE_URL}/api/generate-reply`,
         {
           method: "POST",
           headers: {
