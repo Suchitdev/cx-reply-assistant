@@ -7,17 +7,19 @@ An AI-powered customer support assistant that helps support agents generate poli
 - AI-generated customer support replies using OpenRouter
 - Brand-specific policies for returns, refunds, shipping, and cancellations
 - Review and approve generated replies before adding them to the conversation
+- Safe fallback responses for unsupported policy questions
 - React-based customer support interface
 - Flask REST API backend
 - Docker containers for frontend and backend
-- Docker Compose for running the application locally
+- Docker Compose for local development
 
 ## Tech Stack
 
 - **Frontend:** React, Vite, JavaScript
 - **Backend:** Python, Flask
-- **AI:** OpenRouter API
+- **AI Integration:** OpenRouter API
 - **Containers:** Docker, Docker Compose
+- **Cloud Deployment:** Render
 - **Version Control:** Git and GitHub
 
 ## Architecture
@@ -26,10 +28,10 @@ An AI-powered customer support assistant that helps support agents generate poli
 Customer Support Agent
         |
         v
-React Frontend (Port 5173)
+React Frontend
         |
         v
-Flask Backend (Port 5001)
+Flask REST API
         |
         v
 OpenRouter API
@@ -41,11 +43,18 @@ AI-Generated Reply
 Agent Reviews and Approves
 ```
 
+## Live Deployment
+
+- **Frontend:** Add your actual Render frontend URL here.
+- **Backend Health Check:** https://cx-reply-assistant-5ytz.onrender.com/api/health
+
+The backend health endpoint verifies that the deployed service is responding.
+
 ## Run Locally with Docker Compose
 
 ### Prerequisites
 
-- Docker Desktop with the WSL 2 integration enabled, or Docker Engine in Ubuntu
+- Docker Desktop with WSL 2 integration enabled, or Docker Engine in Ubuntu
 - An OpenRouter API key
 
 ### Setup
@@ -83,8 +92,6 @@ Agent Reviews and Approves
 
 ### Verify the Backend
 
-Check the API health endpoint:
-
 ```bash
 curl http://localhost:5001/api/health
 ```
@@ -92,7 +99,10 @@ curl http://localhost:5001/api/health
 Expected response:
 
 ```json
-{"application":"CX Reply Assistant","status":"healthy"}
+{
+  "application": "CX Reply Assistant",
+  "status": "healthy"
+}
 ```
 
 ### Stop the Application
@@ -105,20 +115,25 @@ docker compose down
 
 - Keep API keys in environment variables.
 - Do not commit `.env` files or expose secrets in source code.
-- Review AI-generated replies before sending them to customers.
+- Review AI-generated replies before approving them.
+- Use appropriate authentication and access controls before production use.
 
 ## Current Limitations
 
-- The Approve & Send workflow is a local demo; it does not send messages to an external customer support platform.
-- Customer conversations and demo activity are handled by the application rather than a production customer support integration.
-- Production deployment requires appropriate API configuration, authentication, monitoring, and secure secret management.
+- Approve & Send is a demo workflow; it does not send messages to an external customer support platform.
+- Customer conversations and activity are handled within the demo application and are not backed by a production customer-support integration.
+- The current prototype does not implement production authentication or persistent conversation storage.
+- AI-generated responses may be incorrect and must be reviewed by an agent.
+- Production use would require additional security, monitoring, testing, and reliable data storage.
 
 ## Future Improvements
 
-- Deploy the frontend and backend to a cloud platform.
+- Add user authentication and role-based access control.
+- Add persistent conversation storage using PostgreSQL or another suitable database.
 - Add automated tests for API responses and policy handling.
-- Add user authentication and persistent conversation storage.
 - Integrate with a real customer support platform.
+- Add retrieval-augmented generation for larger policy collections.
+- Add monitoring, logging, and production-grade error handling.
 
 ## Author
 
