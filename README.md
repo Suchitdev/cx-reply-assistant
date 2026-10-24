@@ -45,7 +45,7 @@ Agent Reviews and Approves
 
 ## Live Deployment
 
-- **Frontend:** Add your actual Render frontend URL here.
+- **Frontend:** https://cx-reply-frontend.onrender.com
 - **Backend Health Check:** https://cx-reply-assistant-5ytz.onrender.com/api/health
 
 The backend health endpoint verifies that the deployed service is responding.
